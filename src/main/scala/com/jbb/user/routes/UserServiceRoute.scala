@@ -8,7 +8,7 @@ import org.http4s.dsl.Http4sDsl
 import org.http4s.HttpRoutes
 
 object UserServiceRoute extends ServiceRoute:
-  def registerUser[F[_] : Concurrent](service: UserService[F]): HttpRoutes[F] =
+  def routes[F[_] : Concurrent](service: UserService[F]): HttpRoutes[F] =
     val dsl = new Http4sDsl[F] {}
     import dsl.*
     HttpRoutes.of[F] {

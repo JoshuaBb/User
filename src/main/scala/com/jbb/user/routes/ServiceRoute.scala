@@ -33,9 +33,10 @@ trait ServiceRoute {
         case Invalid(_) => handleError
       }.run(request)
   }
-  def handleRequest[F[_]: Applicative, Req, Res](request: Request[F], serviceLogicF: Req => F[Res])
-                                                (implicit F: MonadThrow[F], decoder: EntityDecoder[F, Req], encoder: EntityEncoder[F, Res]) : F[Response[F]] =
+
+  def handleRequest[F[_] : Applicative, Req, Res](request: Request[F], serviceLogicF: Req => F[Res])
+                                                 (implicit F: MonadThrow[F], decoder: EntityDecoder[F, Req], encoder: EntityEncoder[F, Res]): F[Response[F]] =
     decodeRequest[F, Req]
-      .flatMapF { req => serviceLogicF(req).flatMap(handleSuccess)}
+      .flatMapF { req => serviceLogicF(req).flatMap(handleSuccess) }
       .run(request)
 }
