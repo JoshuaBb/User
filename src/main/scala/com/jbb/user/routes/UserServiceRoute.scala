@@ -13,5 +13,9 @@ object UserServiceRoute extends ServiceRoute:
     import dsl.*
     HttpRoutes.of[F] {
       case req@POST -> Root / "register" / "user" =>
-        handleRequestWithValidation[F, UserRegistration, UserRegistration, CommonValidatorError](req)(UserRegistration.validate)(service.registerUser)
+        handleRequestWithValidation[F, UserRegistration, UserRegistration, CommonValidatorError](
+          request = req,
+          validateF = UserRegistration.validate,
+          serviceLogicF = service.registerUser
+        )
     }

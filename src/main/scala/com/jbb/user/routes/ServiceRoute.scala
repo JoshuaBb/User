@@ -21,10 +21,10 @@ trait ServiceRoute {
     Response[F](status = Status.BadRequest).pure[F]
 
 
-  def handleRequestWithValidation[F[_] : Applicative, Req, Res, Error](request: Request[F])
-                                                                      (validateF: Req => Validated[Error, Req])
-                                                                      (serviceLogicF: Req => F[Res])
-                                                                      (implicit F: MonadThrow[F], decoder: EntityDecoder[F, Req], encoder: EntityEncoder[F, Res])
+  def handleRequestWithValidation[F[_] : Applicative, Req, Res, Error](request: Request[F],
+                                                                       validateF: Req => Validated[Error, Req],
+                                                                       serviceLogicF: Req => F[Res]
+                                                                      )(implicit F: MonadThrow[F], decoder: EntityDecoder[F, Req], encoder: EntityEncoder[F, Res])
   : F[Response[F]] = {
     decodeRequest[F, Req]
       .map(validateF(_))
@@ -34,8 +34,9 @@ trait ServiceRoute {
       }.run(request)
   }
 
-  def handleRequest[F[_] : Applicative, Req, Res](request: Request[F], serviceLogicF: Req => F[Res])
-                                                 (implicit F: MonadThrow[F], decoder: EntityDecoder[F, Req], encoder: EntityEncoder[F, Res]): F[Response[F]] =
+  def handleRequest[F[_] : Applicative, Req, Res](request: Request[F],
+                                                  serviceLogicF: Req => F[Res]
+                                                 )(implicit F: MonadThrow[F], decoder: EntityDecoder[F, Req], encoder: EntityEncoder[F, Res]): F[Response[F]] =
     decodeRequest[F, Req]
       .flatMapF { req => serviceLogicF(req).flatMap(handleSuccess) }
       .run(request)
