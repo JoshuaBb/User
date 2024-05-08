@@ -25,7 +25,8 @@ lazy val root = (project in file("."))
       "org.scalatest"         %% "scalatest"           % "3.2.18"               % Test,
       "org.typelevel"         %% "munit-cats-effect-3" % MunitCatsEffectVersion % Test,
       "ch.qos.logback"        %  "logback-classic"     % LogbackVersion,
-      "org.tpolecat"          %% "doobie-core"         % DoobieVersion
+      "org.tpolecat"          %% "doobie-core"         % DoobieVersion,
+      "org.tpolecat"          %% "doobie-postgres"     % DoobieVersion
     ),
     assembly / assemblyMergeStrategy := {
       case "module-info.class" => MergeStrategy.discard

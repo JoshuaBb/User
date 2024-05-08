@@ -6,8 +6,9 @@ import cats.implicits.*
 import pureconfig.error.{CannotConvert, ConfigReaderFailures, ConvertFailure}
 
 case class Config(app: AppConfig)
-case class AppConfig(server: ServerConfig)
+case class AppConfig(server: ServerConfig, db: DbConfig)
 case class ServerConfig(host: Host, port: Port)
+case class DbConfig(driver: String, url: String, user: String, password: String)
 
 
 // Not sure that there is a better way to do this, but would like to load the configs
@@ -16,7 +17,10 @@ object Config:
   given ConfigReader[Config] = ConfigReader.forProduct1("app")(Config.apply)
 
 object AppConfig:
-  given ConfigReader[AppConfig] = ConfigReader.forProduct1("server")(AppConfig.apply)
+  given ConfigReader[AppConfig] = ConfigReader.forProduct2("server", "db")(AppConfig.apply)
+
+object DbConfig:
+  given ConfigReader[DbConfig] = ConfigReader.forProduct4("driver", "url", "user", "password")(DbConfig.apply)
 
 
 object ServerConfig:
@@ -34,7 +38,6 @@ object ServerConfig:
 
       }
   }
-
   // Can be improved to take hostName or ipAddress
   given ConfigReader[Host] with {
     def from(cur: ConfigCursor): Either[ConfigReaderFailures, Host] =
