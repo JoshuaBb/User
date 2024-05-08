@@ -5,6 +5,9 @@ import cats.data.NonEmptyList
 import com.jbb.user.util.types.Email
 import cats.implicits._
 
+/**
+ * CommonValidatorError acts as a SemiGroup that can collect multiple errors and chain them together as a NonEmptyList
+ */
 sealed trait CommonValidatorError {
   def displayMessage: String
 }

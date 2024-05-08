@@ -8,6 +8,9 @@ import org.http4s.*
 import org.http4s.Status
 import org.http4s.Status.Ok
 
+/**
+ * ServiceRoute acts as a utility trait for handling HTTP request logic
+ */
 trait ServiceRoute {
 
   // Playing with Kleisli. Probably not using Kleisli at all one look cleaner.
@@ -23,6 +26,7 @@ trait ServiceRoute {
 
   /**
    * Utility method for chaining together request decoding -> request validation -> service logic -> response encoding
+   * If a request has additional validation or needs to pass addition parameters currying is fine.
    *
    * @param request: The HTTP Request that gets sent
    * @param validateF: After parsing the request body validation will be made to determine if it is a valid request body

@@ -7,6 +7,9 @@ import doobie.util.transactor.Transactor
 trait DoobieDb[F[_]]:
   def transactor: Transactor[F]
 
+/***
+ * Initializes a transactor for the Doobie Database
+ */
 object DoobieDb:
   def impl[F[_]: Async](
                          driver: String = "org.postgres.Driver",
