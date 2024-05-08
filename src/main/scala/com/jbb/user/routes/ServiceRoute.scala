@@ -49,6 +49,7 @@ trait ServiceRoute {
       .map(validateF(_))
       .flatMapF {
         case Valid(req) => serviceLogicF(req).flatMap(handleSuccess)
+        // Maybe add a custom serialization response for errors as well rather than just dropping the errors
         case Invalid(_) => handleError
       }.run(request)
   }
