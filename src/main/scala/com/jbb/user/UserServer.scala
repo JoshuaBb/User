@@ -5,6 +5,7 @@ import com.jbb.user.routes.UserServiceRoute
 import com.jbb.user.services.UserService
 import com.jbb.user.store.UserStore
 import com.jbb.user.util.db.DoobieDb
+import doobie.util.transactor.Transactor
 import fs2.io.net.Network
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.server.middleware.Logger
@@ -21,7 +22,7 @@ object UserServer:
     val db = appConfig.db
 
     for {
-      dbTransactor <- Resource.Pure(DoobieDb.impl[F](
+      dbTransactor <- Resource.Pure[F, Transactor[F]](DoobieDb.impl[F](
         driver = db.driver,
         url = db.url,
         user = db.user,
