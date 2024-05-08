@@ -21,6 +21,21 @@ trait ServiceRoute {
     Response[F](status = Status.BadRequest).pure[F]
 
 
+  /**
+   * Utility method for chaining together request decoding -> request validation -> service logic -> response encoding
+   *
+   * @param request: The HTTP Request that gets sent
+   * @param validateF: After parsing the request body validation will be made to determine if it is a valid request body
+   * @param serviceLogicF: After determining it is a valid request body then it will
+   * @param F: Typically just Cats IO
+   * @param decoder: Decodes the request[Req]
+   * @param encoder: Encodes the response[Res]
+   * @tparam F
+   * @tparam Req
+   * @tparam Res
+   * @tparam Error
+   * @return
+   */
   def handleRequestWithValidation[F[_] : Applicative, Req, Res, Error](request: Request[F],
                                                                        validateF: Req => Validated[Error, Req],
                                                                        serviceLogicF: Req => F[Res]
