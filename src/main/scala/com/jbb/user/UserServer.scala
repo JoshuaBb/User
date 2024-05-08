@@ -15,22 +15,24 @@ import org.http4s.implicits.*
 object UserServer:
 
   def run[F[_]: Async: Network](appConfig: AppConfig): F[Nothing] = {
+    // TODO: Mess with dependency injection to clean this up.
+    
     // given AppLogger[F] = Slf4jLogger.getLogger[F]
     val serverConfig = appConfig.server
     val db = appConfig.db
-    
-    // db 
+
+    // db
     val dbTransactor: Transactor[F] = DoobieDb.impl[F](
-      driver = db.driver, 
-      url = db.url, 
-      user = db.user, 
+      driver = db.driver,
+      url = db.url,
+      user = db.user,
       password = db.password,
     ).transactor
 
     // stores
     val userStore = UserStore.impl[F](dbTransactor)
-    
-    // Services 
+
+    // Services
     val userService: UserService[F] = UserService.impl[F](userStore)
 
     val httpApp = (UserServiceRoute.routes[F](userService)).orNotFound
